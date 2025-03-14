@@ -8,8 +8,10 @@ const axios = require("axios");
 admin.initializeApp();
 
 // Get collection names from environment variables
-const POSTS_COLLECTION = process.env.POSTS_COLLECTION || "posts-iteration-1.0";
-const QUERIES_COLLECTION = process.env.QUERIES_COLLECTION || "toxic-queries-test";
+const POSTS_COLLECTION = process.env.POSTS_COLLECTION ||
+    "posts-iteration-1.0";
+const QUERIES_COLLECTION = process.env.QUERIES_COLLECTION ||
+    "toxic-queries-test";
 
 exports.monitorToxicContent = onDocumentWritten(
     `${POSTS_COLLECTION}/{documentId}`,
@@ -95,7 +97,7 @@ exports.monitorToxicContent = onDocumentWritten(
           throw error;
         }
       }
-      
+
       return null;
     },
-); 
+);

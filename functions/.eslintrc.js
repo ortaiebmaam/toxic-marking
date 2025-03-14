@@ -19,6 +19,6 @@ module.exports = {
     {
       files: ["*.js"],
       excludedFiles: "*.test.js",
-    }
+    },
   ],
-}; 
+};
