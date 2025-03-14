@@ -4,7 +4,8 @@
     "runtime_options": {
       "env_vars": {
         "POSTS_COLLECTION": "posts-iteration-1.0",
-        "QUERIES_COLLECTION": "toxic-queries-test"
+        "QUERIES_COLLECTION": "toxic-queries-test",
+        "ADMIN_UPDATE_URL": "https://httpbin.org/put"
       }
     }
   },
@@ -21,4 +22,4 @@
     },
     "singleProjectMode": true
   }
-} 
+}
