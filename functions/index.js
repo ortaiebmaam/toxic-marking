@@ -8,8 +8,12 @@ const axios = require("axios");
 admin.initializeApp();
 
 // Get collection names from environment variables
-const POSTS_COLLECTION = process.env.POSTS_COLLECTION || "posts-iteration-1.0";
-const QUERIES_COLLECTION = process.env.QUERIES_COLLECTION || "toxic-queries-test";
+const POSTS_COLLECTION = process.env.POSTS_COLLECTION ||
+    "posts-iteration-1.0";
+const QUERIES_COLLECTION = process.env.QUERIES_COLLECTION ||
+    "toxic-queries-test";
+const ADMIN_UPDATE_URL = process.env.ADMIN_UPDATE_URL ||
+    "https://httpbin.org/put";
 
 exports.monitorToxicContent = onDocumentWritten(
     `${POSTS_COLLECTION}/{documentId}`,
@@ -48,13 +52,12 @@ exports.monitorToxicContent = onDocumentWritten(
 
           // Prepare headers
           const headers = {
-            "post-id": newData["post-id"] || "",
-            "marked-as-toxic": "true",
+            "post-id": newData["post-id"],
           };
 
           // Send PUT request to httpbin
           const response = await axios.put(
-              "https://httpbin.org/put",
+              ADMIN_UPDATE_URL,
               {},
               {headers},
           );
@@ -95,7 +98,7 @@ exports.monitorToxicContent = onDocumentWritten(
           throw error;
         }
       }
-      
+
       return null;
     },
-); 
+);
