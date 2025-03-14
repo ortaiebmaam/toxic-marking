@@ -1,0 +1,24 @@
+{
+  "functions": {
+    "source": "functions",
+    "runtime_options": {
+      "env_vars": {
+        "POSTS_COLLECTION": "posts-iteration-1.0",
+        "QUERIES_COLLECTION": "toxic-queries-test"
+      }
+    }
+  },
+  "emulators": {
+    "functions": {
+      "port": 5001
+    },
+    "firestore": {
+      "port": 8080
+    },
+    "ui": {
+      "enabled": true,
+      "port": 4000
+    },
+    "singleProjectMode": true
+  }
+} 
