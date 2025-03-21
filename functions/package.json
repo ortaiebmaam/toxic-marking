@@ -3,20 +3,21 @@
   "description": "Cloud Functions for Firebase",
   "scripts": {
     "lint": "eslint .",
-    "serve": "firebase emulators:start --only functions,firestore",
+    "serve": "firebase emulators:start --only functions,firestore,hosting",
     "shell": "firebase functions:shell",
     "start": "npm run shell",
     "deploy": "firebase deploy --only functions",
+    "deploy:region": "firebase deploy --only functions:handleToxicResolution",
     "logs": "firebase functions:log"
   },
   "engines": {
-    "node": "23"
+    "node": "22"
   },
   "main": "index.js",
   "dependencies": {
+    "axios": "^1.6.2",
     "firebase-admin": "^12.0.0",
-    "firebase-functions": "^5.1.0",
-    "axios": "^1.6.2"
+    "firebase-functions": "^6.3.2"
   },
   "devDependencies": {
     "eslint": "^8.15.0",
