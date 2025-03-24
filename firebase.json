@@ -5,6 +5,7 @@
       "env_vars": {
         "POSTS_COLLECTION": "posts-iteration-1.0",
         "QUERIES_COLLECTION": "toxic-queries-test",
+        "RES_URL_PREFIX": "http://localhost:5001/maam-ai-app/us-central1/handleToxicResolution",
         "EMAIL_COLLECTION": "mail",
         "EMAIL_RECIPIENTS": "test@maam.ai, test2@maam.ai",
         "EMAIL_SUBJECT": "Toxic Content Alert - Action Required",

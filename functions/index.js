@@ -17,8 +17,9 @@ const FUNCTION_REGION = process.env.FUNCTION_REGION ||
   "us-central1";
 
 // Email configuration - for the Trigger Email extension
+const RES_URL_PREFIX = process.env.RES_URL_PREFIX || "http://localhost:5001/maam-ai-app/us-central1/handleToxicResolution"
 const EMAIL_COLLECTION = process.env.EMAIL_COLLECTION || "mail";
-const EMAIL_RECIPIENTS = process.env.EMAIL_RECIPIENTS || "david@maam.ai";
+const EMAIL_RECIPIENTS = process.env.EMAIL_RECIPIENTS || "or@maam.ai";
 const EMAIL_SUBJECT = process.env.EMAIL_SUBJECT || "Toxic Content Alert";
 const EMAIL_BODY = process.env.EMAIL_BODY ||
   "A document has been flagged as toxic content. Please review.";
@@ -44,7 +45,6 @@ const sendEmailNotification = async (postContent, docId) => {
       template: {
         name: "toxic-content-alert",
         data: {
-          postId: postId,
           documentId: docId,
           timestamp: new Date().toISOString()
         }
