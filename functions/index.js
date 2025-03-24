@@ -13,10 +13,61 @@ const POSTS_COLLECTION = process.env.POSTS_COLLECTION ||
   "posts-iteration-1.0";
 const QUERIES_COLLECTION = process.env.QUERIES_COLLECTION ||
   "toxic-queries-test";
-const ADMIN_UPDATE_URL = process.env.ADMIN_UPDATE_URL ||
-  "https://httpbin.org/put";
 const FUNCTION_REGION = process.env.FUNCTION_REGION ||
   "us-central1";
+
+// Email configuration - for the Trigger Email extension
+const EMAIL_COLLECTION = process.env.EMAIL_COLLECTION || "mail";
+const EMAIL_RECIPIENTS = process.env.EMAIL_RECIPIENTS || "david@maam.ai";
+const EMAIL_SUBJECT = process.env.EMAIL_SUBJECT || "Toxic Content Alert";
+const EMAIL_BODY = process.env.EMAIL_BODY ||
+  "A document has been flagged as toxic content. Please review.";
+
+// Send email using Firebase Extension
+const sendEmailNotification = async (postContent, docId) => {
+  // Skip if no recipients or extension collection not configured
+  if (!EMAIL_RECIPIENTS || !EMAIL_COLLECTION) {
+    logger.info("Email notification skipped - missing configuration");
+    return null;
+  }
+
+  try {
+    // Create email document for the Firebase Extension to process
+    const emailDoc = {
+      to: EMAIL_RECIPIENTS.split(',').map(email => email.trim()),
+      message: {
+        subject: EMAIL_SUBJECT,
+        text: `${EMAIL_BODY}\n\nPost ID: ${docId}\nFlagged content:\n----\n${postContent}\n----\n\nAccept claim: ${RES_URL_PREFIX}/posts/${docId}/toxic-resolution/accept\nReject claim: ${RES_URL_PREFIX}/posts/${docId}/toxic-resolution/rejected`,
+        html: `<p>${EMAIL_BODY}</p><p>Post ID: <strong>${docId}</strong></p><p>Flagged content:<br/>${postContent}</p><p>  <a href="${RES_URL_PREFIX}/posts/${docId}/toxic-resolution/accept">Accept claim</a><br/>  <a href="${RES_URL_PREFIX}/posts/${docId}/toxic-resolution/rejected">Reject claim</a></p>`,
+      },
+      // Optional fields used by the extension
+      template: {
+        name: "toxic-content-alert",
+        data: {
+          postId: postId,
+          documentId: docId,
+          timestamp: new Date().toISOString()
+        }
+      }
+    };
+
+    // Add document to the mail collection that triggers the extension
+    const result = await admin.firestore()
+      .collection(EMAIL_COLLECTION)
+      .add(emailDoc);
+
+    logger.info("Email notification queued successfully", {
+      emailDocId: result.id,
+      recipients: EMAIL_RECIPIENTS
+    });
+
+    return result.id;
+  } catch (error) {
+    logger.error("Error sending email notification:", error);
+    // Don't throw error to avoid failing the function
+    return null;
+  }
+};
 
 exports.monitorToxicContent = onDocumentWritten(
   `${POSTS_COLLECTION}/{documentId}`,
@@ -58,15 +109,8 @@ exports.monitorToxicContent = onDocumentWritten(
           "post-id": newData["post-id"],
         };
 
-        // Send PUT request to httpbin
-        const response = await axios.put(
-          ADMIN_UPDATE_URL,
-          {},
-          { headers },
-        );
-
-        // Log the response
-        logger.info("Notification sent successfully:", response.data);
+        // Send email notification using Firebase Extension
+        await sendEmailNotification(newData["content"], event.data.after.id);
 
         return response.data;
       } catch (error) {
