@@ -5,7 +5,11 @@
       "env_vars": {
         "POSTS_COLLECTION": "posts-iteration-1.0",
         "QUERIES_COLLECTION": "toxic-queries-test",
-        "ADMIN_UPDATE_URL": "https://httpbin.org/put"
+        "RES_URL_PREFIX": "http://localhost:5001/maam-ai-app/us-central1/handleToxicResolution",
+        "EMAIL_COLLECTION": "mail",
+        "EMAIL_RECIPIENTS": "test@maam.ai, test2@maam.ai",
+        "EMAIL_SUBJECT": "Toxic Content Alert - Action Required",
+        "EMAIL_BODY": "A document has been flagged as toxic content in the system. Please review it as soon as possible."
       }
     }
   },
@@ -21,5 +25,8 @@
       "port": 4000
     },
     "singleProjectMode": true
+  },
+  "extensions": {
+    "firestore-send-email": "firebase/firestore-send-email@0.1.27"
   }
 }
